@@ -1,0 +1,9 @@
+.env/
+.idea/
+.vscode/
+.database/
+
+bin/
+
+*.dev.yml
+.DS_Store
