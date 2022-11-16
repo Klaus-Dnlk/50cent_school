@@ -1,7 +1,5 @@
 # eliftech-school
 
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=ljossha_eliftech-school&token=445e170fa2879695e21c71b91862e896622f30f9)](https://sonarcloud.io/summary/new_code?id=ljossha_eliftech-school)
-
 ## Swagger docs:
 
 **To generate new docs**:
