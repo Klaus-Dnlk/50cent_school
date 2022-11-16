@@ -1,0 +1,383 @@
+basePath: /api/v1
+definitions:
+  command.ChangePassword:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  command.ConfirmEmail:
+    properties:
+      code:
+        type: integer
+      email:
+        type: string
+    required:
+    - code
+    type: object
+  command.Login:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  command.Registration:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  command.RequestToResetPassword:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  controllers.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  controllers.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  controllers.statusResponse:
+    properties:
+      status:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: Back end for 50 Cent Application
+  title: 50 Cent API
+  version: "1.1"
+paths:
+  /admin/actions/users:
+    get:
+      consumes:
+      - application/json
+      description: Get all unverified users (both investors and loaners) in JSON
+      operationId: admin-get-all-unverified-users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all unverified users in JSON
+      tags:
+      - Admin
+  /admin/actions/users/{id}/approve:
+    get:
+      description: Approve account of user with given ID
+      operationId: admin-approve-user
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Approve user with given ID
+      tags:
+      - Admin
+  /admin/actions/users/{id}/decline:
+    get:
+      description: Decline account of user with given ID
+      operationId: admin-decline-user
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Decline user with given ID
+      tags:
+      - Admin
+  /admin/registration:
+    post:
+      consumes:
+      - application/json
+      description: Create new admin account
+      operationId: admin-registration
+      parameters:
+      - description: Email and passwords for admin
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.Registration'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Register new admin
+      tags:
+      - Admin
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Send email and password to get JWT login token
+      operationId: login
+      parameters:
+      - description: Email and password for login
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Get JWT login token
+      tags:
+      - Login
+      - Admin
+  /auth/registration:
+    post:
+      consumes:
+      - application/json
+      description: Create not confirmed user account
+      operationId: registration
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.Registration'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Sign up
+      tags:
+      - Sign-up
+  /auth/registration/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Confirm user email
+      operationId: confirm
+      parameters:
+      - description: Email and code for confirmation
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.ConfirmEmail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Email confirmation
+      tags:
+      - Sign-up
+  /auth/reset:
+    post:
+      consumes:
+      - application/json
+      description: Check is email in db
+      operationId: checkEmailForReset
+      parameters:
+      - description: Email
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.RequestToResetPassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Check Email
+      tags:
+      - Reset Password
+  /auth/reset/change:
+    post:
+      consumes:
+      - application/json
+      description: Change user password
+      operationId: Reset
+      parameters:
+      - description: Email and password to change
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.ChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Change Password
+      tags:
+      - Reset Password
+  /auth/reset/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Confirm user email
+      operationId: confirm Reset
+      parameters:
+      - description: Email and code for confirmation
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.ConfirmEmail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.errorResponse'
+      summary: Email confirmation
+      tags:
+      - Reset Password
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

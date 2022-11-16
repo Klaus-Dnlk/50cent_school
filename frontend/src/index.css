@@ -1,0 +1,61 @@
+@import 'antd/dist/antd.variable.css';
+
+:root {
+  --main-color: #8865a9;
+  --main-color: #d3adf7;
+  --red-button: #f5222d;
+  --page-title-size: 38px;
+  --page-title-line-height: 46px;
+  --page-subtitle-size: 24px;
+  --page-subtitle-line-height: 32px;
+  --primary-color: #fde396;
+  --secondary-color: #8865a9;
+  --header-color: white;
+  --footer-color: black;
+}
+
+
+#root>div {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+header {
+  min-height: 50px;
+}
+
+footer {
+  min-height: 50px;
+  margin-top: auto;
+
+}
+
+.ant-layout-content {
+  min-height: auto;
+}
+  
+.ant-table-wrapper {
+    width: 100%;
+}
+
+.externalLoginButton {
+  display: flex;
+  height: 40px;
+  width: 40px;
+  border: 1px solid rgb(232, 232, 232);
+  background-color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.githubButton {
+background: url(../src/images/githubLogo.png) center/cover no-repeat;
+background-color: #fff;
+}
+
+.facebookButton {
+background: url(../src/images/metaLogo.png) center/cover no-repeat;
+  background-color: #fff;
+}

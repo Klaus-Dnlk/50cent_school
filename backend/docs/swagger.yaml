@@ -1,0 +1,1414 @@
+basePath: /api/v1
+definitions:
+  command.ChangePassword:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  command.ConfirmEmail:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+    required:
+    - code
+    type: object
+  command.ConsumerRegistration:
+    properties:
+      idfile:
+        $ref: '#/definitions/multipart.FileHeader'
+      middleName:
+        type: string
+      name:
+        type: string
+      photo:
+        $ref: '#/definitions/multipart.FileHeader'
+      propertyFile:
+        $ref: '#/definitions/multipart.FileHeader'
+      surname:
+        type: string
+      workFile:
+        $ref: '#/definitions/multipart.FileHeader'
+    type: object
+  command.CreateLoan:
+    properties:
+      creditDesc:
+        type: string
+      creditRate:
+        type: number
+      creditSum:
+        type: number
+      creditTerm:
+        type: integer
+      creditTitle:
+        type: string
+    required:
+    - creditDesc
+    - creditRate
+    - creditSum
+    - creditTerm
+    - creditTitle
+    type: object
+  command.CreateLoanCounteroffer:
+    properties:
+      creditRate:
+        type: number
+      creditTerm:
+        type: integer
+    required:
+    - creditRate
+    - creditTerm
+    type: object
+  command.InvestorRegistration:
+    properties:
+      idfile:
+        $ref: '#/definitions/multipart.FileHeader'
+      middleName:
+        type: string
+      name:
+        type: string
+      photo:
+        $ref: '#/definitions/multipart.FileHeader'
+      surname:
+        type: string
+    type: object
+  command.Login:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  command.LoginConfirm:
+    properties:
+      code:
+        type: string
+    required:
+    - code
+    type: object
+  command.OTP:
+    properties:
+      code:
+        type: string
+    required:
+    - code
+    type: object
+  command.Registration:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+    required:
+    - email
+    - password
+    - phone
+    type: object
+  command.RequestToResetPassword:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  domain.Balance:
+    properties:
+      id:
+        type: integer
+      time:
+        type: string
+      value:
+        type: number
+    type: object
+  domain.Payout:
+    properties:
+      amount:
+        type: number
+      id:
+        type: integer
+      time:
+        type: string
+    type: object
+  eliftech-school_backend_internal_controllers.LoginConfirmResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  eliftech-school_backend_internal_controllers.LoginResponse:
+    properties:
+      token:
+        type: string
+      typesMFA:
+        items:
+          type: string
+        type: array
+    type: object
+  eliftech-school_backend_internal_controllers.balancesResponse:
+    properties:
+      balances:
+        items:
+          $ref: '#/definitions/domain.Balance'
+        type: array
+    type: object
+  eliftech-school_backend_internal_controllers.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  eliftech-school_backend_internal_controllers.otpResponse:
+    properties:
+      code:
+        items:
+          type: integer
+        type: array
+    type: object
+  eliftech-school_backend_internal_controllers.payoutsResponse:
+    properties:
+      payouts:
+        items:
+          $ref: '#/definitions/domain.Payout'
+        type: array
+    type: object
+  eliftech-school_backend_internal_controllers.statusResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  eliftech-school_backend_internal_controllers.stripeURLResponse:
+    properties:
+      url:
+        type: string
+    type: object
+  internal_controllers.LoginConfirmResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  internal_controllers.LoginResponse:
+    properties:
+      token:
+        type: string
+      typesMFA:
+        items:
+          type: string
+        type: array
+    type: object
+  internal_controllers.balancesResponse:
+    properties:
+      balances:
+        items:
+          $ref: '#/definitions/domain.Balance'
+        type: array
+    type: object
+  internal_controllers.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  internal_controllers.otpResponse:
+    properties:
+      code:
+        items:
+          type: integer
+        type: array
+    type: object
+  internal_controllers.payoutsResponse:
+    properties:
+      payouts:
+        items:
+          $ref: '#/definitions/domain.Payout'
+        type: array
+    type: object
+  internal_controllers.statusResponse:
+    properties:
+      status:
+        type: string
+    type: object
+  internal_controllers.stripeURLResponse:
+    properties:
+      url:
+        type: string
+    type: object
+  multipart.FileHeader:
+    properties:
+      filename:
+        type: string
+      header:
+        $ref: '#/definitions/textproto.MIMEHeader'
+      size:
+        type: integer
+    type: object
+  textproto.MIMEHeader:
+    additionalProperties:
+      items:
+        type: string
+      type: array
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: Back end for 50 Cent Application
+  title: 50 Cent API
+  version: "1.1"
+paths:
+  /admin/actions/users:
+    get:
+      consumes:
+      - application/json
+      description: Get all unverified users (both investors and loaners) in JSON
+      operationId: admin-get-all-unverified-users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all unverified users in JSON
+      tags:
+      - Admin
+  /admin/actions/users/{accountType}/{id}/decline:
+    post:
+      description: Decline account of user with given ID
+      operationId: admin-decline-user
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Account type(either 'consumers' or 'investors')
+        in: path
+        name: accountType
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Decline user with given ID
+      tags:
+      - Admin
+  /admin/actions/users/consumers/{id}/approve:
+    post:
+      description: Approve account of user with given ID
+      operationId: admin-approve-consumer
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Approve consumer with given ID
+      tags:
+      - Admin
+  /admin/actions/users/investors/{id}/approve:
+    post:
+      description: Approve account of user with given ID
+      operationId: admin-approve-investor
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Approve investor with given ID
+      tags:
+      - Admin
+  /admin/registration:
+    post:
+      consumes:
+      - application/json
+      description: Create new admin account
+      operationId: admin-registration
+      parameters:
+      - description: Email and passwords for admin
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.Registration'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Register new admin
+      tags:
+      - Admin
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Send email and password to get temporary JWT login token then use
+        it in the 2nd stage
+      operationId: login
+      parameters:
+      - description: Email and password for login
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Get temporary JWT login token
+      tags:
+      - Login
+      - Admin
+  /auth/login/confirm/email:
+    post:
+      consumes:
+      - application/json
+      description: User can send verification code from his email and get JWT token
+      operationId: loginConfirmEmail
+      parameters:
+      - description: Verification code for login
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.LoginConfirm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.LoginConfirmResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Check verification code from email
+      tags:
+      - Login
+      - Admin
+  /auth/login/confirm/otp:
+    post:
+      consumes:
+      - application/json
+      description: User can send verification code from his phone and get JWT token
+      operationId: loginConfirmOTP
+      parameters:
+      - description: Verification code for login
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.OTP'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.LoginConfirmResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Check verification code from OTP
+      tags:
+      - Login
+      - Admin
+  /auth/login/confirm/phone:
+    post:
+      consumes:
+      - application/json
+      description: User can send verification code from his phone and get JWT token
+      operationId: loginConfirmPhone
+      parameters:
+      - description: Verification code for login
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.LoginConfirm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.LoginConfirmResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Check verification code from phone
+      tags:
+      - Login
+      - Admin
+  /auth/login/email:
+    post:
+      consumes:
+      - application/json
+      description: After receiving of temporary token user can send verification code
+        on his email
+      operationId: loginEmail
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Send verification code to email
+      tags:
+      - Login
+      - Admin
+  /auth/login/phone:
+    post:
+      consumes:
+      - application/json
+      description: After receiving of temporary token user can send verification code
+        on his phone
+      operationId: loginPhone
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Send verification code to phone
+      tags:
+      - Login
+      - Admin
+  /auth/registration:
+    post:
+      consumes:
+      - application/json
+      description: Create not confirmed user account
+      operationId: registration
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.Registration'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Sign up
+      tags:
+      - Sign-up
+  /auth/registration/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Confirm user email
+      operationId: confirm
+      parameters:
+      - description: Email and code for confirmation
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.ConfirmEmail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Email confirmation
+      tags:
+      - Sign-up
+  /auth/registration/consumer:
+    post:
+      consumes:
+      - application/json
+      description: Register new consumer for existing user
+      operationId: consumerRegistration
+      parameters:
+      - description: Parameters for consumer registration
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.ConsumerRegistration'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Register new consumer
+      tags:
+      - Consumer
+  /auth/registration/consumer/addPayment:
+    post:
+      consumes:
+      - application/json
+      description: Register stripe account for existing consumer
+      operationId: consumerAddPayment
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Register stripe account for existing consumer
+      tags:
+      - ConsumerPayment
+  /auth/registration/investor:
+    post:
+      consumes:
+      - application/json
+      description: Register new investor for existing user
+      operationId: investorRegistration
+      parameters:
+      - description: Parameters for investor registration
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.InvestorRegistration'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Register new investor
+      tags:
+      - Investor
+  /auth/registration/investor/addPayment:
+    post:
+      consumes:
+      - application/json
+      description: Register stripe account for existing investor
+      operationId: investorAddPayment
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Register stripe account for existing investor
+      tags:
+      - ConsumerPayment
+  /auth/registration/otp:
+    post:
+      consumes:
+      - application/json
+      description: Register OTP by installing Google Authenticator on your phone and
+        scanning QR code
+      operationId: registrationOTP
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.otpResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Register OTP and Google Authenticator
+      tags:
+      - Sign-up
+  /auth/registration/otp/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Confirm OTP set-up by checking code from Google Authenticator
+      operationId: confirmOTP
+      parameters:
+      - description: Code for confirmation
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.OTP'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: OTP registration confirmation
+      tags:
+      - Sign-up
+  /auth/reset:
+    post:
+      consumes:
+      - application/json
+      description: Check is email in db
+      operationId: checkEmailForReset
+      parameters:
+      - description: Email
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.RequestToResetPassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Check Email
+      tags:
+      - Reset Password
+  /auth/reset/change:
+    post:
+      consumes:
+      - application/json
+      description: Change user password
+      operationId: Reset
+      parameters:
+      - description: Email and password to change
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.ChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Change Password
+      tags:
+      - Reset Password
+  /auth/reset/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Confirm user email
+      operationId: confirm Reset
+      parameters:
+      - description: Email and code for confirmation
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.ConfirmEmail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      summary: Email confirmation
+      tags:
+      - Reset Password
+  /consumers/balance:
+    get:
+      consumes:
+      - application/json
+      description: Get List of balance snapshots
+      operationId: getBalanceHistoryConsumer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.balancesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Balance history for consumer
+      tags:
+      - Consumer
+  /consumers/payments:
+    get:
+      consumes:
+      - application/json
+      description: Get List of required payments snapshots
+      operationId: getRequiredPayments
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.payoutsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get required payments for consumer
+      tags:
+      - Consumer
+  /investors/balance:
+    get:
+      consumes:
+      - application/json
+      description: Get List of balance snapshots
+      operationId: getBalanceHistoryInvestor
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.balancesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Balance history for investor
+      tags:
+      - Investor
+  /investors/payouts:
+    get:
+      consumes:
+      - application/json
+      description: Get List of potential payouts snapshots
+      operationId: getPotentialPayouts
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_controllers.payoutsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get potential payouts for investor
+      tags:
+      - Investor
+  /loans:
+    post:
+      consumes:
+      - application/json
+      description: Create loan request form
+      operationId: createLoan
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.CreateLoan'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Loan
+      tags:
+      - Loans
+  /loans/:id/accept:
+    post:
+      consumes:
+      - application/json
+      description: Accept loan request
+      operationId: acceptLoan
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.stripeURLResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Accept Loan
+      tags:
+      - Loans
+  /loans/:id/repay:
+    post:
+      consumes:
+      - application/json
+      description: Make monthly payment for your loan
+      operationId: repayLoan
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.stripeURLResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Repay loan
+      tags:
+      - Loans
+  /loans/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete loan by id
+      operationId: loandelete
+      parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Loan
+      tags:
+      - Loans
+    get:
+      consumes:
+      - application/json
+      description: Get loan by id (yet not )
+      operationId: getloanbyid
+      parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get loans by id
+      tags:
+      - Loans
+    post:
+      consumes:
+      - application/json
+      description: Update loan by id
+      operationId: loanupdate
+      parameters:
+      - description: Loan ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.CreateLoan'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Loan
+      tags:
+      - Loans
+  /loans/{id}/counteroffers:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all counteroffers related to this loan
+      operationId: getLoanCounteroffers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      summary: Loan counteroffers
+      tags:
+      - Loan
+      - Investor
+    post:
+      consumes:
+      - application/json
+      description: Investor can suggest his loan terms to consumer
+      operationId: loanCounteroffer
+      parameters:
+      - description: counteroffer terms
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/command.CreateLoanCounteroffer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      summary: Loan counteroffer
+      tags:
+      - Loan
+      - Investor
+  /loans/{id}/transactions:
+    get:
+      consumes:
+      - application/json
+      description: User can get transactions related to his loan
+      operationId: getLoanTransactions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      summary: Get Loan Transactions
+      tags:
+      - Loan
+      - Investor
+      - Consumer
+  /loans/{page}/{page_size}:
+    get:
+      consumes:
+      - application/json
+      description: Get all loans list
+      operationId: getallloans
+      parameters:
+      - description: Current Page
+        in: path
+        name: page
+        required: true
+        type: integer
+      - description: Page Size
+        in: path
+        name: page_size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Loans
+      tags:
+      - Loans
+  /loans/counteroffers/{id}/accept:
+    post:
+      consumes:
+      - application/json
+      description: Consumer can accept investor's terms and update loan details
+      operationId: loanCounterofferAccept
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      summary: Loan counteroffer accept
+      tags:
+      - Loan
+      - Investor
+      - Consumer
+  /loans/counteroffers/{id}/reject:
+    post:
+      consumes:
+      - application/json
+      description: Consumer can reject investor's terms if he doesn't want to accept
+        them
+      operationId: loanCounterofferReject
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      summary: Loan counteroffer reject
+      tags:
+      - Loan
+      - Investor
+      - Consumer
+  /stripe/webhook:
+    post:
+      consumes:
+      - application/json
+      description: Webhook for stripe events such as account confirmation, payment
+        success or fail
+      operationId: stripeWebhook
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/eliftech-school_backend_internal_controllers.errorResponse'
+      summary: Webhook for stripe events
+      tags:
+      - Webhook
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

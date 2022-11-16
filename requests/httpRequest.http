@@ -1,0 +1,53 @@
+POST http://localhost:8000/api/v1/auth/reset/change
+Content-Type: application/json
+
+{
+  "email": "test@mail.com",
+  "password": "test"
+}
+
+###
+POST http://localhost:8000/api/v1/auth/reset/confirm
+Content-Type: application/json
+
+{
+  "email": "test@mail.com",
+  "code": 1111
+}
+
+###
+POST http://localhost:8000/api/v1/auth/reset
+Content-Type: application/json
+
+{
+  "email": "test@mail.com"
+}
+
+###
+POST http://localhost:8000/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@mail.com",
+  "password": "test"
+}
+
+###
+POST http://localhost:8000/api/v1/auth/registration/confirm
+Content-Type: application/json
+
+{
+  "email": "test@mail.com",
+  "code": 1111
+}
+
+###
+POST http://localhost:8000/api/v1/auth/registration
+Content-Type: application/json
+
+{
+  "email": "test@mail.com",
+  "password": "test"
+}
+
+###
