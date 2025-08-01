@@ -1,4 +1,3 @@
-import { useFormik } from 'formik';
 import { CreateForm } from './CreateScreen.types';
 import { Api } from '@/api';
 import { Button, Form, Input, message, Upload } from 'antd';
@@ -12,6 +11,8 @@ import {
 import { CreateFormValidationSchema } from '@/features/consumer/CreateScreen/CreateScreen.validation';
 import { UploadOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigationGuard } from '@/routing';
+import { useFormReducer } from '@/hooks';
+import { useOptimisticUpdate } from '@/hooks';
 
 export const CreateScreen = () => {
   // Add navigation guard to prevent leaving with unsaved changes
@@ -20,137 +21,163 @@ export const CreateScreen = () => {
     message: 'У вас є незбережені зміни. Ви впевнені, що хочете покинути сторінку?',
     onBeforeNavigate: () => {
       // Check if form has unsaved changes
-      // You can implement your own logic here
-      const hasUnsavedChanges = false; // Replace with actual logic
-      return !hasUnsavedChanges;
+      return !form.isDirty;
     }
   });
 
-  const form = useFormik<CreateForm>({
-    initialValues: {
-      name: '',
-      surname: '',
-      middleName: '',
-      photo: null,
-      work_file: null,
-      id_file: null,
-      property_file: null,
-    },
-    validationSchema: CreateFormValidationSchema,
-    validateOnChange: false,
-    async onSubmit(values) {
-      try {
-        await Api.create({
-          name: values.name,
-          surname: values.surname,
-          middleName: values.middleName,
-          photo: values.photo,
-          work_file: values.work_file,
-          id_file: values.id_file,
-          property_file: values.property_file,
-        });
-      } catch (error) {
-        message.error('something went wrong while creating consumer');
-      }
-    },
-  });
+  // Use custom form reducer instead of formik
+  const form = useFormReducer<CreateForm>({
+    name: '',
+    surname: '',
+    middleName: '',
+    photo: null,
+    work_file: null,
+    id_file: null,
+    property_file: null,
+  }, CreateFormValidationSchema);
+
+  const { optimisticAdd } = useOptimisticUpdate();
+
+  const handleSubmit = async () => {
+    if (!form.validateForm()) {
+      message.error('Будь ласка, виправте помилки в формі');
+      return;
+    }
+
+    form.setSubmitting(true);
+
+    try {
+      await optimisticAdd(
+        ['consumers'],
+        {
+          id: Date.now().toString(), // Temporary ID for optimistic update
+          ...form.values,
+          status: 'pending' as const,
+          createdAt: new Date().toISOString(),
+        },
+        async () => {
+          const result = await Api.create(form.values);
+          return result;
+        }
+      );
+
+      message.success('Споживача створено успішно!');
+      form.resetForm();
+      safeNavigate('/consumer');
+    } catch (error) {
+      message.error('Щось пішло не так при створенні споживача');
+    } finally {
+      form.setSubmitting(false);
+    }
+  };
 
   return (
     <PageContainer>
-      <PageTitle>Будь ласка, заповніть форму</PageTitle>
-      <PageSubtitle>
-        Нам потрібні ці дані, щоб вірно оцінити Ваш
-        <br /> кредитний рейтинг. Ми не розповсюджуємо <br /> ці дані
-      </PageSubtitle>
+      <PageTitle>Створити споживача</PageTitle>
+      <PageSubtitle>Заповніть форму для створення нового споживача</PageSubtitle>
 
-      <form onSubmit={form.handleSubmit}>
+      <Form layout="vertical">
         <Form.Item
+          label="Ім'я"
           validateStatus={form.errors.name ? 'error' : 'success'}
           help={form.errors.name}
         >
           <Input
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Ім'я"
-            name="name"
+            prefix={<UserOutlined />}
+            placeholder="Введіть ім'я"
             value={form.values.name}
-            onChange={form.handleChange}
+            onChange={(e) => form.setFieldValue('name', e.target.value)}
+            onBlur={form.handleBlur('name')}
           />
         </Form.Item>
+
         <Form.Item
+          label="Прізвище"
           validateStatus={form.errors.surname ? 'error' : 'success'}
           help={form.errors.surname}
         >
           <Input
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Прізвище"
-            name="surname"
+            prefix={<UserOutlined />}
+            placeholder="Введіть прізвище"
             value={form.values.surname}
-            onChange={form.handleChange}
+            onChange={(e) => form.setFieldValue('surname', e.target.value)}
+            onBlur={form.handleBlur('surname')}
           />
         </Form.Item>
+
         <Form.Item
+          label="По батькові"
           validateStatus={form.errors.middleName ? 'error' : 'success'}
           help={form.errors.middleName}
         >
           <Input
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="По батькові"
-            name="middleName"
+            prefix={<UserOutlined />}
+            placeholder="Введіть по батькові"
             value={form.values.middleName}
-            onChange={form.handleChange}
+            onChange={(e) => form.setFieldValue('middleName', e.target.value)}
+            onBlur={form.handleBlur('middleName')}
           />
         </Form.Item>
-        <Upload
-          beforeUpload={(file) => {
-            form.setFieldValue('photo', file);
 
-            return false;
-          }}
-          fileList={form.values.photo ? [form.values.photo] : []}
-        >
-          Фотографія:
-          <Button icon={<UploadOutlined />}> Select File</Button>
-        </Upload>
-        <Upload
-          beforeUpload={(file) => {
-            form.setFieldValue('work_file', file);
+        <Form.Item label="Фото">
+          <Upload
+            beforeUpload={(file) => {
+              form.setFieldValue('photo', file);
+              return false; // Prevent upload
+            }}
+            onRemove={() => form.setFieldValue('photo', null)}
+          >
+            <Button icon={<UploadOutlined />}>Завантажити фото</Button>
+          </Upload>
+        </Form.Item>
 
-            return false;
-          }}
-          fileList={form.values.work_file ? [form.values.work_file] : []}
-        >
-          Довідка про місце роботи:
-          <Button icon={<UploadOutlined />}> Select File</Button>
-        </Upload>
-        <Upload
-          beforeUpload={(file) => {
-            form.setFieldValue('id_file', file);
+        <Form.Item label="Робочий документ">
+          <Upload
+            beforeUpload={(file) => {
+              form.setFieldValue('work_file', file);
+              return false;
+            }}
+            onRemove={() => form.setFieldValue('work_file', null)}
+          >
+            <Button icon={<UploadOutlined />}>Завантажити робочий документ</Button>
+          </Upload>
+        </Form.Item>
 
-            return false;
-          }}
-          fileList={form.values.id_file ? [form.values.id_file] : []}
-        >
-          Паспорт:
-          <Button icon={<UploadOutlined />}> Select File</Button>
-        </Upload>
-        <Upload
-          beforeUpload={(file) => {
-            form.setFieldValue('property_file', file);
+        <Form.Item label="Документ, що посвідчує особу">
+          <Upload
+            beforeUpload={(file) => {
+              form.setFieldValue('id_file', file);
+              return false;
+            }}
+            onRemove={() => form.setFieldValue('id_file', null)}
+          >
+            <Button icon={<UploadOutlined />}>Завантажити документ</Button>
+          </Upload>
+        </Form.Item>
 
-            return false;
-          }}
-          fileList={
-            form.values.property_file ? [form.values.property_file] : []
-          }
-        >
-          Документи про наявне майно:
-          <Button icon={<UploadOutlined />}> Select File</Button>
-        </Upload>
+        <Form.Item label="Документ про власність">
+          <Upload
+            beforeUpload={(file) => {
+              form.setFieldValue('property_file', file);
+              return false;
+            }}
+            onRemove={() => form.setFieldValue('property_file', null)}
+          >
+            <Button icon={<UploadOutlined />}>Завантажити документ про власність</Button>
+          </Upload>
+        </Form.Item>
 
         <Form.Item>
-          <RedButton type="submit">Продовжити</RedButton>
+          <RedButton
+            type="primary"
+            onClick={handleSubmit}
+            loading={form.isSubmitting}
+            disabled={!form.isValid}
+          >
+            Створити споживача
+          </RedButton>
         </Form.Item>
-      </form>
+      </Form>
     </PageContainer>
   );
 };
