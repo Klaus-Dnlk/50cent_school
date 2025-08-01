@@ -11,8 +11,21 @@ import {
 } from './Create.styles';
 import { CreateFormValidationSchema } from '@/features/consumer/CreateScreen/CreateScreen.validation';
 import { UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { useNavigationGuard } from '@/routing';
 
 export const CreateScreen = () => {
+  // Add navigation guard to prevent leaving with unsaved changes
+  const { safeNavigate } = useNavigationGuard({
+    enabled: true,
+    message: 'У вас є незбережені зміни. Ви впевнені, що хочете покинути сторінку?',
+    onBeforeNavigate: () => {
+      // Check if form has unsaved changes
+      // You can implement your own logic here
+      const hasUnsavedChanges = false; // Replace with actual logic
+      return !hasUnsavedChanges;
+    }
+  });
+
   const form = useFormik<CreateForm>({
     initialValues: {
       name: '',

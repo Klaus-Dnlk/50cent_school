@@ -10,6 +10,7 @@ import { ConsumerRoutes } from '@/features/consumer';
 import { AdminRoutes } from '@/features/admin/Admin.routes';
 import { CreditRoutes } from '@/features/credit';
 import ProtectedRoute from '@/routing/protected.Routes';
+import { NotFoundPage } from './NotFoundPage';
 
 export function AppRoutes() {
   return (
@@ -35,6 +36,7 @@ export function AppRoutes() {
           path={`${routes.obtain.absolute()}/*`}
           element={<ObtainRoutes />}
         />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
       <Route element={<ProtectedRoute />}>
         <Route

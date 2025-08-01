@@ -1,8 +1,7 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { BrowserRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import styled, { createGlobalStyle } from 'styled-components';
-import { AppRoutes } from './routing';
+import { AppRoutes, RouterProvider } from './routing';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Config } from './config';
 
@@ -28,17 +27,21 @@ export const AppStyled = styled.div`
 `;
 
 function App() {
+  // You can configure this based on your deployment environment
+  // For example, use HashRouter for static hosting or when server doesn't support HTML5 History API
+  const useHashRouter = process.env.REACT_APP_USE_HASH_ROUTER === 'true';
+
   return (
     <GoogleOAuthProvider clientId={Config.GOOGLE_CLIENT_ID}>
       <RecoilRoot>
-        <BrowserRouter>
+        <RouterProvider useHashRouter={useHashRouter}>
           <QueryClientProvider client={queryClient}>
             <AppStyled>
               <GlobalStyle />
               <AppRoutes />
             </AppStyled>
           </QueryClientProvider>
-        </BrowserRouter>
+        </RouterProvider>
       </RecoilRoot>
     </GoogleOAuthProvider>
   );

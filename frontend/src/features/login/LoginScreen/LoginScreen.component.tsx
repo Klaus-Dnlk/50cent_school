@@ -1,6 +1,6 @@
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Form, Input, message } from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { appStorage } from '@/services/appStorage';
 
 import {
@@ -19,9 +19,13 @@ import { routes } from '@/routing';
 import { GoogleLoginButton } from '../googleLogin';
 import { FacebookLoginButton } from '../FacebookLogin';
 import { GithubLoginButton } from '../GithubLogin';
+import { useAsyncRedirect } from '@/routing';
 
 export const LoginScreen = () => {
-  const navigate = useNavigate();
+  const { handleAsyncAction } = useAsyncRedirect({
+    onSuccess: () => message.success('Welcome on board!'),
+    onError: () => message.error("Houston, we've got a problem..."),
+  });
 
   const form = useFormik<LoginForm>({
     initialValues: {
@@ -34,22 +38,27 @@ export const LoginScreen = () => {
     validateOnChange: false,
 
     async onSubmit(values) {
-      try {
-        const response = await Api.login({
-          email: values.email,
-          password: values.password,
-        });
+      await handleAsyncAction(
+        async () => {
+          const response = await Api.login({
+            email: values.email,
+            password: values.password,
+          });
 
-        appStorage.setApiKey(response.jwtToken);
-
-        message.success('Welcome on board!');
-        const params = response.typesMFA
-          .map((val) => `typesMFA=${val}`)
-          .join('&');
-        navigate(`./confirmType?${params}`);
-      } catch (error) {
-        return message.error("Houston, we've got a problem...");
-      }
+          appStorage.setApiKey(response.jwtToken);
+          
+          const params = response.typesMFA
+            .map((val) => `typesMFA=${val}`)
+            .join('&');
+          
+          return { response, params };
+        },
+        undefined, // No immediate redirect, handle it in success callback
+        ({ params }) => {
+          // Navigate to confirm type page after successful login
+          window.location.href = `./confirmType?${params}`;
+        }
+      );
     },
   });
 
