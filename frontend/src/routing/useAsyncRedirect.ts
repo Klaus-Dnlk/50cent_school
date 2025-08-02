@@ -14,8 +14,8 @@ export const useAsyncRedirect = (options: AsyncRedirectOptions = {}) => {
   const {
     onSuccess,
     onError,
-    successMessage = 'Операція виконана успішно',
-    errorMessage = 'Сталася помилка'
+    successMessage = 'Operation completed successfully',
+    errorMessage = 'An error occurred'
   } = options;
 
   const handleAsyncAction = useCallback(async <T>(

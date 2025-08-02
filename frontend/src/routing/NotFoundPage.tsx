@@ -17,13 +17,13 @@ export const NotFoundPage = () => {
     <Result
       status="404"
       title="404"
-      subTitle="Вибачте, сторінка, яку ви шукаєте, не існує."
+      subTitle="Sorry, the page you are looking for does not exist."
       extra={[
         <Button type="primary" key="home" onClick={handleGoHome}>
-          На головну
+          Go Home
         </Button>,
         <Button key="back" onClick={handleGoBack}>
-          Назад
+          Go Back
         </Button>,
       ]}
     />

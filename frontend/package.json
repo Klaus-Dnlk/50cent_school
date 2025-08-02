@@ -7,6 +7,8 @@
     "@react-oauth/google": "^0.2.6",
     "antd": "^4.20.7",
     "axios": "^0.27.2",
+    "crypto-js": "^4.1.1",
+    "dompurify": "^2.4.3",
     "formik": "^2.2.9",
     "gapi-script": "^1.2.0",
     "jwt-decode": "^3.1.2",
@@ -34,6 +36,8 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/crypto-js": "^4.1.1",
+    "@types/dompurify": "^2.3.3",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.11.38",
     "@types/react": "^18.0.10",
@@ -114,7 +118,11 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx}\"",
     "format-check": "prettier --check \"**/*.{ts,tsx,js,jsx}\"",
     "check-ts-files": "bash ./scripts/check-ts-files.sh",
-    "prepare": "cd .. && husky install frontend/.husky"
+    "prepare": "cd .. && husky install frontend/.husky",
+    "audit": "npm audit",
+    "audit:fix": "npm audit fix",
+    "security:check": "npm audit && npm outdated",
+    "security:update": "npm update && npm audit fix"
   },
   "browserslist": {
     "production": [

@@ -16,7 +16,7 @@ const ProtectedRoute = () => {
         alignItems: 'center', 
         height: '100vh' 
       }}>
-        <Spin size="large" tip="Перевірка авторизації..." />
+        <Spin size="large" tip="Checking authorization..." />
       </div>
     );
   }

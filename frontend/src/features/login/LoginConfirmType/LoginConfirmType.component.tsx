@@ -46,21 +46,21 @@ export const LoginConfirmType = () => {
 
   return (
     <PageContainer>
-      <PageTitle>Оберіть тип підтвердження входу</PageTitle>
+      <PageTitle>Choose login confirmation type</PageTitle>
 
       {typesMFA.includes('otp') && (
         <RedButton onClick={() => handleOTP()}>
-          <ButtonText> Підтвердження через Google Authenticator </ButtonText>
+          <ButtonText>Confirmation via Google Authenticator</ButtonText>
         </RedButton>
       )}
       {typesMFA.includes('phone') && (
         <RedButton onClick={() => handlePhone()}>
-          <ButtonText>Підтвердження через номер телефону</ButtonText>
+          <ButtonText>Confirmation via phone number</ButtonText>
         </RedButton>
       )}
       {typesMFA.includes('email') && (
         <RedButton onClick={() => handleEmail()}>
-          <ButtonText>Підтвердження через електронну пошту</ButtonText>
+          <ButtonText>Confirmation via email</ButtonText>
         </RedButton>
       )}
     </PageContainer>

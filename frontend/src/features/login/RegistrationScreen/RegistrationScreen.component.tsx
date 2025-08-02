@@ -58,10 +58,10 @@ export const RegistrationScreen = () => {
         <ConfirmScreen />
       ) : (
         <>
-          <PageTitle>Створити аккаунт</PageTitle>
+          <PageTitle>Create Account</PageTitle>
           <PageSubtitle>
-            Вже є аккаунт?&nbsp;
-            <Link to={routes.login.absolute()}>Увійти</Link>
+            Already have an account?&nbsp;
+            <Link to={routes.login.absolute()}>Sign In</Link>
           </PageSubtitle>
 
           <form onSubmit={form.handleSubmit}>
@@ -85,7 +85,7 @@ export const RegistrationScreen = () => {
               <Input
                 prefix={<LockOutlined className="site-form-item-icon" />}
                 type="password"
-                placeholder="Пароль"
+                placeholder="Password"
                 name="password"
                 value={form.values.password}
                 onChange={form.handleChange}
@@ -99,7 +99,7 @@ export const RegistrationScreen = () => {
               <Input
                 prefix={<LockOutlined className="site-form-item-icon" />}
                 type="phone"
-                placeholder="Телефон"
+                placeholder="Phone"
                 name="phone"
                 value={form.values.phone}
                 onChange={form.handleChange}
@@ -109,17 +109,17 @@ export const RegistrationScreen = () => {
             <Form.Item required={true}>
               <label>
                 <input type="checkbox" required />
-                &nbsp; Я погоджуюсь з Умовами користування та
+                &nbsp; I agree to the Terms of Service and
                 <br />
-                Політикою конфіденційності
+                Privacy Policy
               </label>
             </Form.Item>
 
             <Form.Item>
-              <RedButton type="submit">Продовжити</RedButton>
+              <RedButton type="submit">Continue</RedButton>
             </Form.Item>
           </form>
-          <ExternalLoginTitle>Зареєструватися через:</ExternalLoginTitle>
+          <ExternalLoginTitle>Sign up with:</ExternalLoginTitle>
           <ExternalLoginButtonsContainer>
             <GoogleLoginButton />
             <FacebookLoginButton />

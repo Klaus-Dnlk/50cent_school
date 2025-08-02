@@ -46,23 +46,23 @@ export const LoginConfirmScreen = () => {
 
   return (
     <PageContainer>
-      <PageTitle>Введіть отриманий код підтвердження входу</PageTitle>
+      <PageTitle>Enter the received login confirmation code</PageTitle>
       <PageSubtitle>
-        Не прийшов код?&nbsp;
-        <Link to={routes.login.absolute()}>Повторити спробу</Link>
+        Didn't receive the code?&nbsp;
+        <Link to={routes.login.absolute()}>Try again</Link>
       </PageSubtitle>
 
       <form onSubmit={form.handleSubmit}>
         <Form.Item validateStatus={form.errors.code ? 'error' : 'success'}>
           <Input
-            placeholder="Код"
+            placeholder="Code"
             value={form.values.code > 0 ? form.values.code : ''}
             name="code"
             onChange={form.handleChange}
           />
         </Form.Item>
         <Form.Item>
-          <RedButton type="submit">Продовжити</RedButton>
+          <RedButton type="submit">Continue</RedButton>
         </Form.Item>
       </form>
     </PageContainer>

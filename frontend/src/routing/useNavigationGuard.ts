@@ -8,7 +8,7 @@ interface NavigationGuardOptions {
 }
 
 export const useNavigationGuard = (options: NavigationGuardOptions = {}) => {
-  const { enabled = true, message = 'Ви впевнені, що хочете покинути цю сторінку?', onBeforeNavigate } = options;
+  const { enabled = true, message = 'Are you sure you want to leave this page?', onBeforeNavigate } = options;
   const navigate = useNavigate();
   const location = useLocation();
   const isNavigatingRef = useRef(false);

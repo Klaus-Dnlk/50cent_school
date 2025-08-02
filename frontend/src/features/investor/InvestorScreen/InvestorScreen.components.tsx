@@ -17,9 +17,9 @@ export function InvestorScreen() {
       <InvestorHomeContainer>
         <Row justify="space-between" align="middle">
           <Col span={12}>
-            <TitleContainer>Починайте інвестувати та заробляти!</TitleContainer>
+            <TitleContainer>Start investing and earning!</TitleContainer>
             <SubTitleContainer>
-              На цій сторінці розміщено всі активні заяви на інвестиції👇
+              All active investment applications are listed on this page👇
             </SubTitleContainer>
           </Col>
           <Col span={12}>
@@ -33,14 +33,14 @@ export function InvestorScreen() {
       <InvestmentsContainer>
         <Row>
           <TitleContainer>
-            Найвигідніші пропозиції для інвестицій{' '}
+            Most profitable investment opportunities{' '}
           </TitleContainer>
           <InvestmentsTable />
         </Row>
       </InvestmentsContainer>
 
       <QuestionContainer>
-        <TitleContainer>Залишились запитання?</TitleContainer>
+        <TitleContainer>Still have questions?</TitleContainer>
         <InvestorQuestion />
       </QuestionContainer>
     </Layout>
