@@ -1,0 +1,1 @@
+export { offlineSyncService } from './offlineSync.service'; 

@@ -4,3 +4,5 @@ export * from './Footer/Footer';
 export * from './Layout/Layout';
 export * from './InvestmentsTable/InvestmentsTable';
 export * from './InvestorQuestion/InvestorQuestion';
+export * from './IndexedDBDemo';
+export * from './SyncStatus';

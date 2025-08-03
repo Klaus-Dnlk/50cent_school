@@ -1,0 +1,1 @@
+export { indexedDBService, STORES } from './indexedDB.service'; 
