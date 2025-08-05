@@ -10,7 +10,7 @@ import {
 import { IUser } from '@/models/user.interface';
 import logo from '../../images/logo-test.png';
 import { HeaderStyles } from './Header.styles';
-import './Header.css';
+import './Header.scss';
 import { NavLink } from 'react-router-dom';
 import { routes } from '@/routing';
 

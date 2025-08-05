@@ -1,7 +1,0 @@
-#root section footer {
-  background-color: var(--footer-color);
-}
-
-#root section footer * {
-  color: var(--header-color);
-}

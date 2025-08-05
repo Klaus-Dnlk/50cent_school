@@ -1,4 +1,4 @@
-import { CreateForm } from './CreateScreen.types';
+reacimport { CreateForm } from './CreateScreen.types';
 import { Api } from '@/api';
 import { Button, Form, Input, message, Upload } from 'antd';
 
